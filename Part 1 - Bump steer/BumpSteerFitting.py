@@ -10,10 +10,15 @@
 #---------------------------------------------------------
 
 import numpy as np
+import os
 import matplotlib.pyplot as plt
 import scipy.optimize as opt
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+import plot_style as ps
 
-from CorneringStiffnessFitting import Fz_fit
+ps.apply_style()
+
 
 z = np.array([
     -40,
@@ -64,33 +69,14 @@ r_squared = 1 - (leftover_spread / total_spread)
 # Data plotting
 #---------------------------------------------------------
 
-fig, ax = plt.subplots()
-
-ax.scatter(
-    z,
-    Toe,
-    s=50, 
-    facecolor="white", 
-    edgecolors="blue", 
-    alpha=0.7, 
-    label="Dataset points",
-    zorder=3,
+fig, ax = ps.plot_curve_fit(
+    z, Toe, z_fit, Toe_fit, rmse, r_squared,
+    title="Bump steer: toe angle vs wheel travel",
+    xlabel="Vertical wheel displacement, $z$ [mm]",
+    ylabel="Toe angle [deg]",
+    rmse_unit="deg",
+    legend_loc="lower center",
 )
-
-ax.plot(
-    z_fit, 
-    Toe_fit, 
-    color="red", 
-    label="Fitted curve",
-    zorder=2,
-)
-
-ax.set_title("Bump Steer Curve Fitting")
-ax.set_xlabel("Vertical Displacement - z [mm]")
-ax.set_ylabel("Toe Angle - Toe [deg]")
-ax.legend()
-ax.text(0.05, 0.95, f"RMSE: {rmse:.2f}\nR²: {r_squared:.4f}", transform=ax.transAxes, fontsize=10, verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white', alpha=0.5))
-
-plt.show()
+ps.save_figure(fig, __file__, "BumpSteerFitting.png")
 
 print("Fitted parameters:", popt)

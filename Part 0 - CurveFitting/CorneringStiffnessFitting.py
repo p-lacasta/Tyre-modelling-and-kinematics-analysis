@@ -11,8 +11,14 @@
 
 import matplotlib.pyplot as plt
 import math
+import os
 from scipy.optimize import curve_fit
 import numpy as np
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+import plot_style as ps
+
+ps.apply_style()
 
 #---------------------------------------------------------
 # Input data
@@ -85,33 +91,13 @@ r_squared = 1-(leftover_spread / total_spread)
 # Data plotting
 #---------------------------------------------------------
 
-fig, ax = plt.subplots()
-
-ax.scatter(
-    Fz,
-    CFa_deg,
-    s=50, 
-    facecolor="white", 
-    edgecolors="blue", 
-    alpha=0.7, 
-    label="Dataset points",
-    zorder=3,
+fig, ax = ps.plot_curve_fit(
+    Fz, CFa_deg, Fz_fit, CFa_fit_deg, rmse, r_squared,
+    title="Cornering stiffness vs vertical load",
+    xlabel="Vertical load, $F_z$ [N]",
+    ylabel=r"Cornering stiffness, $C_{F\alpha}$ [N/deg]",
+    rmse_unit="N/deg",
 )
-
-ax.plot(
-    Fz_fit, 
-    CFa_fit_deg, 
-    color="red", 
-    label="Fitted curve",
-    zorder=2,
-)
-
-ax.set_title("Cornering Stiffness Curve Fitting")
-ax.set_xlabel("Vertical Force - Fz [N]")
-ax.set_ylabel("Cornering Stiffness - CFa [N/deg]")
-ax.legend()
-ax.text(0.05, 0.95, f"RMSE: {rmse:.2f}\nR²: {r_squared:.4f}", transform=ax.transAxes, fontsize=10, verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white', alpha=0.5))
-
-plt.show()
+ps.save_figure(fig, __file__, "CorneringStiffness.png")
 
 print("Fitted parameters:", popt)

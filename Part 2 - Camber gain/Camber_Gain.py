@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 
 ## --- INPUT DATA ---
 
@@ -244,4 +245,12 @@ ax7b.set_title("Zoom: suspension and roll centre")
 fig7.suptitle(f"Original vs New Geometry - Roll Centre Migration ({BODY_ROLL_ANGLE}° roll, {WHEEL_VERTICAL_DISPLACEMENT} mm heave)")
 fig7.tight_layout(rect=(0, 0.1, 1, 1))
 
-plt.show()
+FIGURES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "figures")
+os.makedirs(FIGURES_DIR, exist_ok=True)
+fig1.savefig(os.path.join(FIGURES_DIR, "Wheel_Geometry.png"), dpi=300, bbox_inches="tight")
+fig2.savefig(os.path.join(FIGURES_DIR, "Instant_Centre.png"), dpi=300, bbox_inches="tight")
+fig3.savefig(os.path.join(FIGURES_DIR, "Roll_Centre.png"), dpi=300, bbox_inches="tight")
+fig4.savefig(os.path.join(FIGURES_DIR, "New_Wheel_Geometry.png"), dpi=300, bbox_inches="tight")
+fig5.savefig(os.path.join(FIGURES_DIR, "New_Instant_Centre.png"), dpi=300, bbox_inches="tight")
+fig6.savefig(os.path.join(FIGURES_DIR, "New_Roll_Centre.png"), dpi=300, bbox_inches="tight")
+fig7.savefig(os.path.join(FIGURES_DIR, "Roll_Centre_Migration.png"), dpi=300, bbox_inches="tight")

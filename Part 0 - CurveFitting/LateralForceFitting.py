@@ -11,8 +11,14 @@
 
 import matplotlib.pyplot as plt
 import math
+import os
 from scipy.optimize import curve_fit
 import numpy as np
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+import plot_style as ps
+
+ps.apply_style()
 
 #---------------------------------------------------------
 # Input data
@@ -94,34 +100,13 @@ r_squared = 1-(leftover_spread / total_spread)
 # Data plotting
 #---------------------------------------------------------
 
-fig, ax = plt.subplots()
-
-ax.scatter(
-    alpha_deg,
-    Fy,
-    s=50, 
-    facecolor="white", 
-    edgecolors="blue", 
-    alpha=0.7, 
-    label="Dataset points",
-    zorder=3,
+fig, ax = ps.plot_curve_fit(
+    alpha_deg, Fy, alpha_fit_deg, Fy_fit, rmse, r_squared,
+    title="Lateral force vs slip angle",
+    xlabel=r"Slip angle, $\alpha$ [deg]",
+    ylabel="Lateral force, $F_y$ [N]",
+    rmse_unit="N",
 )
-
-ax.plot(
-    alpha_fit_deg, 
-    Fy_fit, 
-    color="red", 
-    label="Fitted curve",
-    zorder=2,
-)
-
-ax.set_title("Lateral Force Curve Fitting")
-ax.set_xlabel("Slip Angle - α [deg]")
-ax.set_ylabel("Lateral Force - Fy [N]")
-ax.text(0.05, 0.95, f"RMSE: {rmse:.2f}\nR²: {r_squared:.4f}", transform=ax.transAxes, fontsize=10, verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white', alpha=0.5))
-
-ax.legend()
-
-plt.show()
+ps.save_figure(fig, __file__, "LateralForce.png")
 
 print("Fitted parameters:", popt)
